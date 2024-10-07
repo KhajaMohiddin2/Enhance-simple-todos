@@ -1,6 +1,7 @@
 import './index.css'
 import {Component} from 'react'
-import TodoItem from '../TodoItem/'
+import {v4 as uuidv4} from 'uuid'
+import TodoItem from '../TodoItem'
 
 const initialTodosList = [
   {
@@ -37,27 +38,74 @@ const initialTodosList = [
   },
 ]
 
+// Write your code here
 class SimpleTodos extends Component {
-  state = {todolist: initialTodosList}
+  state = {
+    todoList: initialTodosList,
+    inputData: '',
+  }
 
-  deleteTodo = id => {
-    const {todolist} = this.state
-    const filterTodo = todolist.filter(each => each.id !== id)
-    this.setState({todolist: filterTodo})
+  deleteTodo = todoId => {
+    const {todoList} = this.state
+    const filteredUsersData = todoList.filter(each => each.id !== todoId)
+    this.setState({
+      todoList: filteredUsersData,
+    })
+  }
+
+  onChangeInput = event => {
+    this.setState({inputData: event.target.value})
+  }
+
+  onAddNewTask = () => {
+    const {inputData} = this.state
+    const newArr = {id: uuidv4(), title: inputData}
+    this.setState(prev => ({
+      todoList: [...prev.todoList, newArr],
+      inputData: '',
+    }))
+  }
+
+  onSaveExitingTask = (id, taskTitle) => {
+    const {todoList} = this.state
+    const newUpdatedList = todoList.map(each => {
+      if (each.id === id) {
+        return {...each, title: taskTitle}
+      }
+      return each
+    })
+    this.setState({todoList: newUpdatedList})
   }
 
   render() {
-    const {todolist} = this.state
+    const {todoList, inputData} = this.state
     return (
-      <div className="container">
-        <div className="card">
-          <h1>Simple Todos</h1>
-          <ul>
-            {todolist.map(eachItem => (
+      <div className="bg-container">
+        <div className="todo-card">
+          <h1 className="heading">Simple Todos</h1>
+          <div className="input-div-container">
+            <input
+              type="text"
+              className="input"
+              placeholder="Add Task"
+              value={inputData}
+              onChange={this.onChangeInput}
+            />
+            <button
+              onClick={this.onAddNewTask}
+              className="add-task-btn"
+              type="button"
+            >
+              Add
+            </button>
+          </div>
+          <ul className="todo">
+            {todoList.map(eachTodo => (
               <TodoItem
-                details={eachItem}
+                key={eachTodo.id}
+                todoList={eachTodo}
+                onEditedTask={this.onSaveExitingTask}
                 deleteTodo={this.deleteTodo}
-                key={eachItem.id}
               />
             ))}
           </ul>
