@@ -1,0 +1,21 @@
+/* Write your CSS here */
+
+li {
+  list-style-type: none;
+  margin: 14px;
+  font-family: 'Roboto';
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+p {
+  color: #000000;
+}
+
+button {
+  color: #ff0b37;
+  background-color: #ffffff;
+  border: 1px solid #ff0b37;
+  padding: 6px;
+  border-radius: 5px;
+}
